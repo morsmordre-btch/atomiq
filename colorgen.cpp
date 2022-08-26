@@ -44,7 +44,8 @@ void ColorGen::loop()
 			{
 				_colorQueue.push(Colors(std::rand() % 3));
 				_backupColorList.push_back(_colorQueue.back());
-				std::this_thread::sleep_for(std::chrono::milliseconds(_periodGen));
+				std::this_thread::sleep_for(std::chrono::milliseconds(
+																_periodGen));
 			}
 
 		}

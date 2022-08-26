@@ -28,6 +28,11 @@ int main()
 					 "2 - Start color Sort" << std::endl <<
 					 "9 - Stop color Gen" << std::endl <<
 					 "0 - Stop Color Sort" << std::endl;
+		const int startGen = 1;
+		const int startSort = 2;
+		const int stopGen = 9;
+		const int stopSort = 0;
+
 		int key = -1;
 		bool run = true;
 		bool gen = true;
@@ -37,22 +42,22 @@ int main()
 			std::cin >> key;
 			switch (key)
 			{
-			case 1 :
+			case startGen :
 				colorGen.start();
 				gen = true;
 			break;
 
-			case 2 :
+			case startSort :
 				colorSort.start();
 				sort = true;
 			break;
 
-			case 9 :
+			case stopGen :
 				gen = false;
 				colorGen.stop();
 			break;
 
-			case 0 :
+			case stopSort :
 				sort = false;
 				colorSort.stop();
 			break;

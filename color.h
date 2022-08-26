@@ -4,15 +4,14 @@
 #include <iostream>
 #include <list>
 #include <queue>
+#include <string>
 
-#include <cstdlib>
 #include <cassert>
+
 #include <thread>
 #include <mutex>
-#include <chrono>
 #include <atomic>
-#include <functional>
-#include <string>
+
 
 enum class Colors : int
 {
@@ -25,7 +24,9 @@ class Color
 {
 public:
 	Color(Colors colorValue);
+
 	Colors getColor();
+
 	friend	std::ostream &operator<<(std::ostream &out, Color &colo);
 
 private:

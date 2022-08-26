@@ -2,7 +2,6 @@
 
 ColorGen::ColorGen(std::queue <Color>& colorQueue) : _colorQueue(colorQueue)
 {
-
 }
 
 ColorGen::~ColorGen()

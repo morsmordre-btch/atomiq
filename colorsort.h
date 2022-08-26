@@ -17,7 +17,6 @@ public:
 
 	void setColorOrder(std::string colorOrder);
 
-
 private:
 	std::queue<Color>& _colorQueue;
 	std::list<Color>& _sortedColorList;

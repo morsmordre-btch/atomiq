@@ -12,7 +12,6 @@
 #include <mutex>
 #include <atomic>
 
-
 enum class Colors : int
 {
 	Red = 0,

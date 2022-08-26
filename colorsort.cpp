@@ -5,7 +5,6 @@ ColorSort::ColorSort(std::queue <Color>& colorQueue,
 					 _colorQueue(colorQueue),
 					 _sortedColorList(sortedColorList)
 {
-
 }
 
 ColorSort::~ColorSort()

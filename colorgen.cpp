@@ -32,25 +32,16 @@ std::list<Color> ColorGen::getBackupList()
 
 void ColorGen::loop()
 {
-	try
+	std::cout << "START COLOR GEN THREAD" << std::endl;
+	size_t maxSizeQueue = 1000;
+	while(run)
 	{
-		std::cout << "START COLOR GEN THREAD" << std::endl;
-		size_t maxSizeQueue = 1000;
-		while(run)
+		std::scoped_lock lock(mut);
+		if ((_colorQueue.size() < maxSizeQueue))
 		{
-//			std::scoped_lock lock(m);
-			if ((_colorQueue.size() < maxSizeQueue))
-			{
-				_colorQueue.push(Colors(std::rand() % 3));
-				_backupColorList.push_back(_colorQueue.back());
-				std::this_thread::sleep_for(std::chrono::milliseconds(
-																_periodGen));
-			}
-
+			_colorQueue.push(Colors(std::rand() % 3));
+			_backupColorList.push_back(_colorQueue.back());
+			std::this_thread::sleep_for(std::chrono::milliseconds(_periodGen));
 		}
-	}
-	catch (int e)
-	{
-
 	}
 }

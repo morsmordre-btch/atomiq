@@ -12,6 +12,8 @@
 #include <mutex>
 #include <atomic>
 
+static std::mutex mut;
+
 enum class Colors : int
 {
 	Red = 0,

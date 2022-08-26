@@ -29,11 +29,12 @@ void ColorSort::loop()
 	int addIndexMiddle = 0;
 	while(run)
 	{
-//		std::scoped_lock lock(m);
 		if (_colorQueue.size() > 0)
 		{
+			std::scoped_lock lock(mut);
 			Color colo = _colorQueue.front();
 			_colorQueue.pop();
+
 			Colors thisColor = colo.getColor();
 			if (thisColor == _frontColor)
 			{
@@ -59,7 +60,6 @@ void ColorSort::setColorOrder(std::string colorOrder)
 	{
 		assert(it == 'R' || it == 'G' || it == 'B' ||
 			   it == 'r' || it == 'g' || it == 'b');
-
 	}
 
 	int count = 0;

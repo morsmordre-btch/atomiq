@@ -3,13 +3,9 @@
 Color::Color(Colors colorValue)
 {
 	if (colorValue >= Colors::Red && colorValue <= Colors::Blue)
-	{
 		_value = colorValue;
-	}
 	else
-	{
-		throw 1;
-	}
+		_value = Colors::Red;
 }
 
 Colors Color::getColor()

@@ -1,18 +1,10 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include <iostream>
-#include <list>
-#include <queue>
+#include <ostream>
+
 #include <string>
-
-#include <cassert>
-
-#include <thread>
-#include <mutex>
-#include <atomic>
-
-static std::mutex mut;
+#include <array>
 
 enum class Colors : int
 {
@@ -26,12 +18,14 @@ class Color
 public:
 	Color(Colors colorValue);
 
-	Colors getColor();
+	Colors getColor() const;
 
-	friend	std::ostream &operator<<(std::ostream &out, Color &colo);
+    friend std::ostream &operator<<(std::ostream &out, Color &colo);
 
 private:
 	Colors _value;
+
+	static const std::array<const std::string, 3> _colorLookUp;
 
 };
 

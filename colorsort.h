@@ -1,6 +1,20 @@
 #ifndef COLORSORT_H
 #define COLORSORT_H
 
+#include <iostream>
+
+#include <list>
+#include <queue>
+#include <string>
+#include <array>
+
+#include <thread>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
+
+#include <algorithm>
+
 #include "color.h"
 
 class ColorSort
@@ -15,17 +29,19 @@ public:
 
 	void stop();
 
-	void setColorOrder(std::string colorOrder);
+	void setMutex(std::mutex* m);
+
+	bool setColorOrder(std::string colorOrder);
 
 private:
 	std::queue<Color>& _colorQueue;
 	std::list<Color>& _sortedColorList;
 	std::thread _currentThread;
-	std::atomic<bool> run = true;
+	std::mutex* _m;
+	std::condition_variable* _cv;
+	std::atomic<bool> _run = false;
 
-	Colors _frontColor = Colors::Red;
-	Colors _middleColor = Colors::Green;
-	Colors _backColor = Colors::Blue;
+	std::array<Colors, 3> _order;
 
 	void loop();
 };

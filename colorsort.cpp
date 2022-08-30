@@ -9,78 +9,120 @@ ColorSort::ColorSort(std::queue <Color>& colorQueue,
 
 ColorSort::~ColorSort()
 {
-	_currentThread.join();
+	_run = false;
 };
 
 void ColorSort::start()
 {
-	_currentThread = std::thread(&ColorSort::loop, this);
+	if (!_run)
+	{
+		_currentThread = std::thread(&ColorSort::loop, this);
+		_run = true;
+	}
+	else
+	{
+		std::cerr << "SORT THREAD ALREADY WORK" << std::endl;
+	}
 }
 
 void ColorSort::stop()
 {
-	run = false;
-	std::cout << "STOP COLOR SORT THREAD" << std::endl;
+
+	if (_run)
+	{
+		std::cout << "STOPIN COLOR SORT THREAD" << std::endl;
+		_run = false;
+		_currentThread.join();
+	}
+}
+
+void ColorSort::setMutex(std::mutex* m)
+{
+	_m = m;
 }
 
 void ColorSort::loop()
 {
 	std::cout << "START COLOR SORT THREAD" << std::endl;
 	int addIndexMiddle = 0;
-	while(run)
+	try
 	{
-		if (_colorQueue.size() > 0)
+		while(_run)
 		{
-			std::scoped_lock lock(mut);
-			Color colo = _colorQueue.front();
-			_colorQueue.pop();
+			if (_colorQueue.size() > 0)
+			{
+				Color colo{Colors::Red};
+				{
+					std::scoped_lock lock(*_m);
+					colo = _colorQueue.front();
+					_colorQueue.pop();
+				}
 
-			Colors thisColor = colo.getColor();
-			if (thisColor == _frontColor)
-			{
-				_sortedColorList.push_front(colo);
-				addIndexMiddle++;
-			}
-			else if (thisColor == _middleColor)
-			{
-				_sortedColorList.insert(std::next(_sortedColorList.begin(),
-												  addIndexMiddle), colo);
-			}
-			else if (thisColor == _backColor)
-			{
-				_sortedColorList.push_back(colo);
+				Colors thisColor = colo.getColor();
+				if (thisColor == _order[0])
+				{
+					_sortedColorList.push_front(colo);
+					addIndexMiddle++;
+				}
+				else if (thisColor == _order[1])
+				{
+					_sortedColorList.insert(std::next(_sortedColorList.begin(),
+											addIndexMiddle), colo);
+				}
+				else if (thisColor == _order[2])
+				{
+					_sortedColorList.push_back(colo);
+				}
+				else
+				{
+					std::cerr << "OUT OF RANGE" << std::endl;
+				}
 			}
 		}
 	}
+	catch (std::bad_alloc& e)
+	{
+		std::cerr << e.what() << std::endl;
+		stop();
+	}
+	std::cout << "STOP COLOR SORT THREAD" << std::endl;
 }
 
-void ColorSort::setColorOrder(std::string colorOrder)
+bool ColorSort::setColorOrder(std::string colorOrder)
 {
-	for (auto it : colorOrder)
+	constexpr std::array<char, 3> chColors = {'R', 'G', 'B'};
+
+	if (colorOrder.size() != chColors.size())
 	{
-		assert(it == 'R' || it == 'G' || it == 'B' ||
-			   it == 'r' || it == 'g' || it == 'b');
+		std::cerr << "ERROR SET COLOR ORDER" << std::endl;
+		return false;
 	}
 
-	int count = 0;
-	Colors order[] = {_frontColor, _middleColor, _backColor};
-	for (auto it : colorOrder)
+	constexpr std::array<Colors, 3> colors = {Colors::Red,
+											  Colors::Green,
+											  Colors::Blue};
+
+	std::transform(colorOrder.cbegin(), colorOrder.cend(),
+				   colorOrder.begin(), [](unsigned char c)
 	{
-		if (it == 'R')
+		return std::toupper(c);
+	});
+
+	for (size_t i = 0; i < colorOrder.size(); i++)
+	{
+		std::string::size_type posOrder = colorOrder.find(chColors[i]);
+		if (posOrder != std::string::npos)
+
 		{
-			order[count++] = Colors::Red;
+			_order[posOrder] = colors[i];
 		}
-		else if (it == 'G')
+		else
 		{
-			order[count++] = Colors::Green;
-		}
-		else if (it == 'B')
-		{
-			order[count++] = Colors::Blue;
+			std::cerr << "ERROR SET COLOR ORDER" << std::endl;
+			return false;
 		}
 	}
-	_frontColor = order[0];
-	_middleColor = order[1];
-	_backColor = order[2];
+
+	return true;
 }
 

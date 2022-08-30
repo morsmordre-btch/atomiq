@@ -1,5 +1,9 @@
 #include "color.h"
 
+const std::array<const std::string, 3> Color::_colorLookUp = {"RED",
+															  "GREEN",
+															  "BLUE"};
+
 Color::Color(Colors colorValue)
 {
 	if (colorValue >= Colors::Red && colorValue <= Colors::Blue)
@@ -8,24 +12,15 @@ Color::Color(Colors colorValue)
 		_value = Colors::Red;
 }
 
-Colors Color::getColor()
+Colors Color::getColor() const
 {
 	return _value;
 }
 
 std::ostream &operator<<(std::ostream &out, Color &colo)
 {
-	switch (colo._value)
-	{
-		case Colors::Red :
-			out << "RED";
-		break;
-		case Colors::Green :
-			out << "GREEN";
-		break;
-		case Colors::Blue :
-			out << "BLUE";
-		break;
-	}
+	out << colo._colorLookUp[static_cast<int>(colo._value)];
 	return out;
 }
+
+
